@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -8,8 +10,19 @@ import static org.junit.Assert.*;
 public class ScoringMatrixTest {
     @Test
     public void hash() {
-        ScoringMatrix s = new ScoringMatrix() {
-        };
+        ScoringMatrix s = new ScoringMatrix();
         assertEquals(7, s.hash('G'));
+    }
+
+    @Test
+    public void load() throws IOException {
+        ScoringMatrix s = new ScoringMatrix("pam120");
+        assertEquals(1, s.matrix[6][2]);
+    }
+
+    @Test
+    public void getScore() throws IOException {
+        ScoringMatrix s = new ScoringMatrix("pam120");
+        assertEquals(-2, s.getScore('Q', 'S'));
     }
 }
