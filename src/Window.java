@@ -1,6 +1,10 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 /**
  * Created by tan on 12/5/16.
@@ -11,11 +15,14 @@ public class Window {
     private JButton clearButton;
     private JRadioButton nucleotideRadioButton;
     private JRadioButton proteinRadioButton;
-    private JComboBox comboBox1;
+    private JComboBox scoringScheme;
     private JButton alignButton;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
+    private JPanel mainPanel;
+    private JButton quitButton;
+    private JSpinner matchScore;
+    private JSpinner mismatchScore;
+    private JSpinner gapScore;
+    private JLabel scoringSchemeLabel;
     private ButtonGroup inputType;
 
     public Window() {
@@ -29,8 +36,70 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.showOpenDialog(uploadFASTAButton);
+                fileChooser.setFileFilter(new FileFilter() {
+                    @Override
+                    public boolean accept(File f) {
+                        return f.getName().endsWith(".fasta");
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "FASTA File";
+                    }
+                });
+                int retVal = fileChooser.showOpenDialog(mainPanel);
+                if (retVal == JFileChooser.APPROVE_OPTION) {
+                    File fastaFile = fileChooser.getSelectedFile();
+                    try {
+                        BufferedReader bufferedReader = new BufferedReader(new FileReader(fastaFile));
+                        String line;
+                        while ((line = bufferedReader.readLine()) != null) {
+                            fastaInput.append(line + "\n");
+                        }
+                    } catch (java.io.IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
             }
         });
+        quitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        nucleotideRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scoringScheme.setEnabled(false);
+                scoringSchemeLabel.setEnabled(false);
+            }
+        });
+
+        proteinRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scoringSchemeLabel.setEnabled(true);
+                scoringScheme.setEnabled(true);
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Pairwise Sequence Alignment by Eli Tan");
+        frame.setContentPane(new Window().mainPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    private void createUIComponents() {
+        matchScore = new JSpinner();
+        mismatchScore = new JSpinner();
+        gapScore = new JSpinner();
+        matchScore.setValue(1);
+        mismatchScore.setValue(0);
+        gapScore.setValue(-1);
     }
 }
