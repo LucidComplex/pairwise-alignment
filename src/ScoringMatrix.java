@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * Created by tan on 12/4/16.
@@ -33,7 +32,6 @@ public class ScoringMatrix {
                     values[h++] = Integer.valueOf(s);
                 }
             }
-
             colIndex = hash(labels[i].charAt(0));
             for (int j = 0; j < values.length; j++) {
                 matrix[colIndex][hash(labels[j].charAt(0))] = values[j];

@@ -23,6 +23,7 @@ public class Window {
     private JSpinner mismatchScore;
     private JSpinner gapScore;
     private JLabel scoringSchemeLabel;
+    private JButton resetButton;
     private ButtonGroup inputType;
 
     public Window() {
@@ -84,12 +85,34 @@ public class Window {
                 scoringScheme.setEnabled(true);
             }
         });
+        quitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scoringScheme.setSelectedIndex(0);
+                mismatchScore.setValue(0);
+                gapScore.setValue(-1);
+                matchScore.setValue(1);
+                inputType.clearSelection();
+            }
+        });
+        alignButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Pairwise Sequence Alignment by Eli Tan");
         frame.setContentPane(new Window().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
