@@ -9,6 +9,6 @@ public class Window {
     private JButton clearButton;
     private JRadioButton nucleotideRadioButton;
     private JRadioButton proteinRadioButton;
-    private JButton alignButton;
     private JComboBox comboBox1;
+    private JButton alignButton;
 }
