@@ -11,4 +11,6 @@ public class Window {
     private JRadioButton proteinRadioButton;
     private JComboBox comboBox1;
     private JButton alignButton;
+    private ButtonGroup inputType;
+
 }

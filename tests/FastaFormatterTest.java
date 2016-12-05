@@ -16,8 +16,14 @@ public class FastaFormatterTest {
 
     @Test
     public void invalidFormat() {
-        String invalidFasta = "> PROTEIN \n\nACTGAC";
+        String invalidFasta = "PROTEIN \n\nACTGAC";
         assertFalse(FastaFormatter.check(Fasta.NUCLEOTIDE, invalidFasta));
+    }
+
+    @Test
+    public void invalidNucleotide() {
+        String invalidNuc = "> NUCLEOTIDE????\nACTAGATCV";
+        assertFalse(FastaFormatter.check(Fasta.NUCLEOTIDE, invalidNuc));
     }
 
     @Test
@@ -37,5 +43,12 @@ public class FastaFormatterTest {
         String protein = "> PROTEIN TEST\nVFTELSPAKTV";
         Fasta fasta = FastaFormatter.format(Fasta.PROTEIN, protein);
         assertEquals("VFTELSPAKTV", fasta.getSequence());
+    }
+
+    @Test
+    public void invalidFormatting() {
+        String protein = "! PROTEEEEIN\nVFTELFSP";
+        Fasta fasta = FastaFormatter.format(Fasta.PROTEIN, protein);
+        assertNull(fasta);
     }
 }

@@ -139,7 +139,7 @@
     </children>
   </grid>
   <buttonGroups>
-    <group name="inputType">
+    <group name="inputType" bound="true">
       <member id="469d5"/>
       <member id="469d5"/>
       <member id="ee38d"/>
