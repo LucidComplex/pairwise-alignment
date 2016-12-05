@@ -18,40 +18,42 @@ public class SimpleAligner {
         String sequenceA = f1.getSequence();
         String sequenceB = f2.getSequence();
         int[][] matrix = SequenceAligner.createGlobalMatrix(sequenceA.length(), sequenceB.length(), gap);
-        fillMatrix(matrix, sequenceA, sequenceB);
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                System.out.printf("%d ", matrix[i][j]);
-            }
-            System.out.println();
-        }
+        Direction[][] directions = fillMatrix(matrix, sequenceA, sequenceB);
         int score = matrix[matrix.length - 1][matrix[0].length - 1];
         return score;
     }
 
     public Direction[][] fillMatrix(int[][] matrix, String seqA, String seqB) {
-        Direction[][] directionMatrix = new Direction[matrix.length][matrix[0].length];
+        Direction[][] directions = new Direction[matrix.length][matrix[0].length];
+        Direction dir;
         for (int i = 1; i < matrix.length; i++) {
             for (int j = 1; j < matrix[i].length; j++) {
+                dir = new Direction();
                 int diagonal = matrix[i - 1][j - 1] + score(seqA.charAt(i - 1), seqB.charAt(j - 1));
                 int up = matrix[i][j - 1] + gap;
                 int left = matrix[i - 1][j] + gap;
                 int max = diagonal;
-                Direction direction = Direction.DIAGONAL;
                 if (max < up) {
                     max = up;
-                    direction = Direction.UP;
                 }
                 if (max < left) {
                     max = left;
-                    direction = Direction.LEFT;
+                }
+                if (max == diagonal) {
+                    dir.diagonal = true;
+                }
+                if (max == left) {
+                    dir.left = true;
+                }
+                if (max == up) {
+                    dir.up = true;
                 }
 
+                directions[i][j] = dir;
                 matrix[i][j] = max;
-                directionMatrix[i][j] = direction;
             }
         }
-        return directionMatrix;
+        return directions;
     }
 
     private int score(char a, char b) {
@@ -60,6 +62,6 @@ public class SimpleAligner {
 
 }
 
-enum Direction{
-    DIAGONAL, UP, LEFT;
+class Direction {
+    boolean up, left, diagonal;
 }

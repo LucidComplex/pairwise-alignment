@@ -57,6 +57,7 @@ public class Window {
                     File fastaFile = fileChooser.getSelectedFile();
                     try {
                         BufferedReader bufferedReader = new BufferedReader(new FileReader(fastaFile));
+                        fastaInput.setText("");
                         String line;
                         while ((line = bufferedReader.readLine()) != null) {
                             fastaInput.append(line + "\n");
