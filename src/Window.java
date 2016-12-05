@@ -101,5 +101,8 @@ public class Window {
         matchScore.setValue(1);
         mismatchScore.setValue(0);
         gapScore.setValue(-1);
+
+        String[] matrices = {"BLOSUM62", "PAM120"};
+        scoringScheme = new JComboBox(matrices);
     }
 }
