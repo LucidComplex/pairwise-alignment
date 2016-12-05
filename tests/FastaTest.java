@@ -1,8 +1,9 @@
+import fasta.Fasta;
 import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by tan on 12/4/16.
