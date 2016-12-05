@@ -19,22 +19,47 @@ public class SimpleAligner {
         String sequenceB = f2.getSequence();
         int[][] matrix = SequenceAligner.createGlobalMatrix(sequenceA.length(), sequenceB.length(), gap);
         fillMatrix(matrix, sequenceA, sequenceB);
-        return 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.printf("%d ", matrix[i][j]);
+            }
+            System.out.println();
+        }
+        int score = matrix[matrix.length - 1][matrix[0].length - 1];
+        return score;
     }
 
-    public void fillMatrix(int[][] matrix, String seqA, String seqB) {
+    public Direction[][] fillMatrix(int[][] matrix, String seqA, String seqB) {
+        Direction[][] directionMatrix = new Direction[matrix.length][matrix[0].length];
         for (int i = 1; i < matrix.length; i++) {
             for (int j = 1; j < matrix[i].length; j++) {
-                matrix[i][j] = SequenceAligner.max(
-                        matrix[i - 1][j - 1] + score(seqA.charAt(i - 1), seqB.charAt(j - 1)),
-                        matrix[i][j - 1] + gap,
-                        matrix[i - 1][j] + gap);
+                int diagonal = matrix[i - 1][j - 1] + score(seqA.charAt(i - 1), seqB.charAt(j - 1));
+                int up = matrix[i][j - 1] + gap;
+                int left = matrix[i - 1][j] + gap;
+                int max = diagonal;
+                Direction direction = Direction.DIAGONAL;
+                if (max < up) {
+                    max = up;
+                    direction = Direction.UP;
+                }
+                if (max < left) {
+                    max = left;
+                    direction = Direction.LEFT;
+                }
+
+                matrix[i][j] = max;
+                directionMatrix[i][j] = direction;
             }
         }
+        return directionMatrix;
     }
 
     private int score(char a, char b) {
         return a == b ? match : mismatch;
     }
 
+}
+
+enum Direction{
+    DIAGONAL, UP, LEFT;
 }

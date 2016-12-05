@@ -27,4 +27,5 @@ public class SequenceAlignerTest {
             assertEquals(0, matrix[i][0]);
         }
     }
+
 }

@@ -1,3 +1,6 @@
+import fasta.Fasta;
+import fasta.FastaFormatter;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.event.ActionEvent;
@@ -5,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Arrays;
 
 /**
  * Created by tan on 12/5/16.
@@ -105,6 +109,18 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (nucleotideRadioButton.isSelected()) {
+                    SimpleAligner aligner = new SimpleAligner(
+                            (int) matchScore.getValue(), (int) mismatchScore.getValue(), (int) gapScore.getValue());
+                    String input = fastaInput.getText();
+                    String[] inputs = input.split("\n\n");
+                    System.out.println(Arrays.toString(inputs));
+                    if (inputs.length > 2) {
+                        JOptionPane.showMessageDialog(mainPanel, "Too many inputs");
+                    } else {
+                        int score = aligner.align(FastaFormatter.format(
+                                Fasta.NUCLEOTIDE, inputs[0]), FastaFormatter.format(Fasta.NUCLEOTIDE, inputs[1]));
+                        System.out.println(score);
+                    }
                 }
                 if (proteinRadioButton.isSelected()) {
 
