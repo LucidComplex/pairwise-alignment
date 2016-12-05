@@ -18,7 +18,7 @@ public class SequenceAligner {
     }
 
     public static int[][] createGlobalMatrix(int col, int row, int gapScore) {
-        int[][] matrix = createMatrix(col, row);
+        int[][] matrix = createMatrix(col + 1, row + 1);
         for (int i = 0; i < matrix[0].length; i++) {
             matrix[0][i] = gapScore * i;
         }
@@ -29,6 +29,6 @@ public class SequenceAligner {
     }
 
     public static int[][] createLocalMatrix(int col, int row) {
-        return createMatrix(col, row);
+        return createMatrix(col + 1, row + 1);
     }
 }
