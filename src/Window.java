@@ -104,7 +104,11 @@ public class Window {
         alignButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (nucleotideRadioButton.isSelected()) {
+                }
+                if (proteinRadioButton.isSelected()) {
 
+                }
             }
         });
     }
