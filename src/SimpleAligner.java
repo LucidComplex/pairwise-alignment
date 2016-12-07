@@ -3,6 +3,7 @@ import sun.reflect.generics.tree.Tree;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -62,8 +63,13 @@ public class SimpleAligner {
         stack.push(node);
         while (!stack.isEmpty()) {
             next = stack.pop();
+            /*
             for (TreeNode n : next.children) {
                 stack.push(n);
+            }
+            */
+            if (next.children.size() > 0) {
+                stack.push(next.children.get(0));
             }
             if (next.direction == null) {
                 continue;
