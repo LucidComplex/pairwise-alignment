@@ -1,5 +1,4 @@
 import fasta.Fasta;
-import sun.reflect.generics.tree.Tree;
 
 import java.util.*;
 
@@ -17,7 +16,7 @@ public class SimpleAligner {
         this.gap = gap;
     }
 
-    public int align(Fasta f1, Fasta f2) {
+    public Result align(Fasta f1, Fasta f2) {
         String sequenceA = f1.getSequence();
         String sequenceB = f2.getSequence();
         int[][] matrix = SequenceAligner.createGlobalMatrix(sequenceA.length(), sequenceB.length(), gap);
@@ -49,15 +48,43 @@ public class SimpleAligner {
         TreeNode node = new TreeNode();
         traceBack(paths, paths.length - 1, paths[0].length - 1, node);
         List<String> alignments = new LinkedList<>();
-        printAlignment(node, "", alignments);
+        getAlignment(node, "", alignments);
+        List<Alignment> outAlign = new LinkedList<>();
         for (String s : alignments) {
-            System.out.println(s);
+            Alignment a = new Alignment(sequenceA, sequenceB);
+            int i = 0;
+            for (char c : s.toCharArray()) {
+                switch (c) {
+                    case 'D':
+                        if (a.sequenceA.charAt(i) == a.sequenceB.charAt(i)) {
+                            a.middle += "*";
+                        } else {
+                            a.middle += ".";
+                        }
+                        break;
+                    case 'L':
+                        a.sequenceA = a.sequenceA.substring(0, i) + "-" + a.sequenceA.substring(i);
+                        a.middle += " ";
+                        break;
+                    case 'U':
+                        a.sequenceB = a.sequenceB.substring(0, i) + "-" + a.sequenceB.substring(i);
+                        a.middle += " ";
+                        break;
+                }
+                i++;
+            }
+            outAlign.add(a);
         }
         int score = matrix[matrix.length - 1][matrix[0].length - 1];
-        return score;
+        Result r = new Result();
+        r.score = score;
+        r.alignments = outAlign;
+        r.fastaA = f1;
+        r.fastaB = f2;
+        return r;
     }
 
-    private String printAlignment(TreeNode node, String alignment, List<String> alignments) {
+    private String getAlignment(TreeNode node, String alignment, List<String> alignments) {
         if (node.direction != null) {
             switch (node.direction) {
                 case DIAGONAL:
@@ -75,7 +102,7 @@ public class SimpleAligner {
             alignments.add(alignment);
         } else {
             for (TreeNode n : node.children) {
-                printAlignment(n, alignment, alignments);
+                getAlignment(n, alignment, alignments);
             }
         }
         return alignment;

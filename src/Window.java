@@ -3,12 +3,15 @@ import fasta.FastaFormatter;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by tan on 12/5/16.
@@ -118,9 +121,9 @@ public class Window {
                     if (inputs.length > 2) {
                         JOptionPane.showMessageDialog(mainPanel, "Too many inputs");
                     } else {
-                        int score = aligner.align(FastaFormatter.format(
+                        Result result = aligner.align(FastaFormatter.format(
                                 Fasta.NUCLEOTIDE, inputs[0]), FastaFormatter.format(Fasta.NUCLEOTIDE, inputs[1]));
-                        System.out.println(score);
+                        ResultWindow.show(buildOutputString(result));
                     }
                 }
                 if (proteinRadioButton.isSelected()) {
@@ -128,6 +131,51 @@ public class Window {
                 }
             }
         });
+    }
+
+    private String buildOutputString(Result result) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Pairwise Sequence Alignment ver. 1.0 by Eli Tan\n");
+        builder.append("Run date: " + new Date(System.currentTimeMillis())+ "\n\n");
+        builder.append("Submitted sequences:\n");
+        builder.append(result.fastaA.getId() + "\n");
+        for (int i = 0; i < result.fastaA.length(); i++) {
+            if (i % 10 == 0 && i != 0) {
+                builder.append(" ");
+            }
+            builder.append(result.fastaA.getSequence().charAt(i));
+        }
+        builder.append("\n");
+        builder.append(result.fastaB.getId() + "\n");
+        for (int i = 0; i < result.fastaB.length(); i++) {
+            if (i % 10 == 0 && i != 0) {
+                builder.append(" ");
+            }
+            builder.append(result.fastaB.getSequence().charAt(i));
+        }
+        builder.append("\n\n");
+        builder.append("Lengths:\n");
+        builder.append(result.fastaA.getId().substring(1) + ": " + result.fastaA.length() + "\n");
+        builder.append(result.fastaB.getId().substring(1) + ": " + result.fastaB.length() + "\n");
+        builder.append("\n");
+        builder.append("Frequencies: \n");
+        builder.append(result.fastaA.getId().substring(1) + ": \n");
+        for (Map.Entry<Character, Integer> e : result.fastaA.getFrequencies().entrySet()) {
+            builder.append(e.getKey() + " = " + e.getValue() + "\n");
+        }
+        builder.append("\n");
+        builder.append(result.fastaB.getId().substring(1) + ": \n");
+        for (Map.Entry<Character, Integer> e : result.fastaB.getFrequencies().entrySet()) {
+            builder.append(e.getKey() + " = " + e.getValue() + "\n");
+        }
+        builder.append("\n");
+
+        builder.append("Optimal Alignment: \n");
+        for (Alignment alignment : result.alignments) {
+            builder.append(alignment.toString() + "\n\n");
+        }
+        builder.append("Score: " + result.score);
+        return builder.toString();
     }
 
     public static void main(String[] args) {

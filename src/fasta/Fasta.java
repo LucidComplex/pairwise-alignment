@@ -43,4 +43,8 @@ public class Fasta {
     public String getSequence() {
         return sequence;
     }
+
+    public String getId() {
+        return id;
+    }
 }
