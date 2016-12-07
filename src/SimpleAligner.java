@@ -50,7 +50,7 @@ public class SimpleAligner {
             System.out.println();
         }
         TreeNode node = new TreeNode();
-        traceBack(paths, paths.length - 1, paths[0].length - 1, node.children);
+        traceBack(paths, paths.length - 1, paths[0].length - 1, node);
         printAlignment(node);
         int score = matrix[matrix.length - 1][matrix[0].length - 1];
         return score;
@@ -59,6 +59,7 @@ public class SimpleAligner {
     private void printAlignment(TreeNode node) {
         Stack<TreeNode> stack = new Stack<>();
         Stack<String> alignment = new Stack<>();
+        Stack<TreeNode> split = new Stack<>();
         TreeNode next;
         stack.push(node);
         while (!stack.isEmpty()) {
@@ -91,7 +92,7 @@ public class SimpleAligner {
         }
     }
 
-    private void traceBack(Path[][] paths, int row, int col, List<TreeNode> children) {
+    private void traceBack(Path[][] paths, int row, int col, TreeNode parent) {
         Path dir = paths[row][col];
         TreeNode n;
         if (row == 0 && col == 0) {
@@ -102,18 +103,21 @@ public class SimpleAligner {
         }
         if (dir.diagonal) {
             n = new TreeNode(Direction.DIAGONAL);
-            children.add(n);
-            traceBack(paths, row - 1, col - 1, n.children);
+            n.parent = parent;
+            parent.children.add(n);
+            traceBack(paths, row - 1, col - 1, n);
         }
         if (dir.left) {
             n = new TreeNode(Direction.LEFT);
-            children.add(n);
-            traceBack(paths, row, col - 1, n.children);
+            n.parent = parent;
+            parent.children.add(n);
+            traceBack(paths, row, col - 1, n);
         }
         if (dir.up) {
             n = new TreeNode(Direction.UP);
-            children.add(n);
-            traceBack(paths, row - 1, col, n.children);
+            n.parent = parent;
+            parent.children.add(n);
+            traceBack(paths, row - 1, col, n);
         }
     }
 
@@ -127,6 +131,9 @@ public class SimpleAligner {
                 int up = matrix[i - 1][j] + gap;
                 int left = matrix[i][j - 1] + gap;
                 int max = diagonal;
+                if (seqA.charAt(i - 1) != seqB.charAt(j - 1)) {
+                    dir.mismatch = true;
+                }
                 if (max < up) {
                     max = up;
                 }
@@ -157,7 +164,7 @@ public class SimpleAligner {
 }
 
 class Path {
-    boolean up, left, diagonal;
+    boolean up, left, diagonal, mismatch;
 }
 
 enum Direction {
@@ -167,6 +174,7 @@ enum Direction {
 class TreeNode {
     Direction direction;
     List<TreeNode> children;
+    TreeNode parent;
 
     public TreeNode() {
         children = new LinkedList<>();
