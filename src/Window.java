@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -112,22 +113,30 @@ public class Window {
         alignButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String input = fastaInput.getText();
+                String[] inputs = input.split("\n\n");
+                System.out.println(Arrays.toString(inputs));
+                if (inputs.length > 2) {
+                    JOptionPane.showMessageDialog(mainPanel, "Too many inputs");
+                    return;
+                }
                 if (nucleotideRadioButton.isSelected()) {
                     SimpleAligner aligner = new SimpleAligner(
                             (int) matchScore.getValue(), (int) mismatchScore.getValue(), (int) gapScore.getValue());
-                    String input = fastaInput.getText();
-                    String[] inputs = input.split("\n\n");
-                    System.out.println(Arrays.toString(inputs));
-                    if (inputs.length > 2) {
-                        JOptionPane.showMessageDialog(mainPanel, "Too many inputs");
-                    } else {
-                        Result result = aligner.align(FastaFormatter.format(
-                                Fasta.NUCLEOTIDE, inputs[0]), FastaFormatter.format(Fasta.NUCLEOTIDE, inputs[1]));
-                        ResultWindow.show(buildOutputString(result));
-                    }
+                    Result result = aligner.align(FastaFormatter.format(
+                            Fasta.NUCLEOTIDE, inputs[0]), FastaFormatter.format(Fasta.NUCLEOTIDE, inputs[1]));
+                    ResultWindow.show(buildOutputString(result));
                 }
                 if (proteinRadioButton.isSelected()) {
-
+                    try {
+                        ScoringMatrix mat = new ScoringMatrix((String) scoringScheme.getSelectedItem());
+                        ProteinAligner aligner = new ProteinAligner(mat);
+                        Result result = aligner.align(FastaFormatter.format(
+                                Fasta.PROTEIN, inputs[0]), FastaFormatter.format(Fasta.PROTEIN, inputs[1]));
+                        ResultWindow.show(buildOutputString(result));
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         });

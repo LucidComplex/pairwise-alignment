@@ -9,6 +9,7 @@ import java.io.IOException;
 public class ScoringMatrix {
     protected int[][] matrix;
     protected final String bank = "ARNDCQEGHILKMFPSTWYVBZX*";
+    public String name;
 
     public ScoringMatrix() {
 
@@ -16,6 +17,7 @@ public class ScoringMatrix {
 
     public ScoringMatrix(String fileName) throws IOException {
         BufferedReader bReader = new BufferedReader(new FileReader(new File(fileName)));
+        name = fileName;
         String line;
         line = bReader.readLine();
         String[] labels = line.trim().split("  ");
