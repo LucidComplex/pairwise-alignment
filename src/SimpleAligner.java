@@ -1,10 +1,7 @@
 import fasta.Fasta;
 import sun.reflect.generics.tree.Tree;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by rl-14 on 12/5/16.
@@ -25,71 +22,63 @@ public class SimpleAligner {
         String sequenceB = f2.getSequence();
         int[][] matrix = SequenceAligner.createGlobalMatrix(sequenceA.length(), sequenceB.length(), gap);
         Path[][] paths = fillMatrix(matrix, sequenceA, sequenceB);
-        for (int i = 1; i < paths.length; i++) {
-            for (int j = 1; j < paths[0].length; j++) {
-                if (paths[i][j].diagonal) {
-                    System.out.printf("d");
-                }
-                else {
-                    System.out.printf(".");
-                }
-                if (paths[i][j].left) {
-                    System.out.printf("l");
-                }
-                else {
-                    System.out.printf(".");
-                }
-                if (paths[i][j].up) {
-                    System.out.printf("u");
-                }
-                else {
-                    System.out.printf(".");
-                }
-                System.out.printf(" ");
-            }
-            System.out.println();
-        }
+//        for (int i = 1; i < paths.length; i++) {
+//            for (int j = 1; j < paths[0].length; j++) {
+//                if (paths[i][j].diagonal) {
+//                    System.out.printf("d");
+//                }
+//                else {
+//                    System.out.printf(".");
+//                }
+//                if (paths[i][j].left) {
+//                    System.out.printf("l");
+//                }
+//                else {
+//                    System.out.printf(".");
+//                }
+//                if (paths[i][j].up) {
+//                    System.out.printf("u");
+//                }
+//                else {
+//                    System.out.printf(".");
+//                }
+//                System.out.printf(" ");
+//            }
+//            System.out.println();
+//        }
         TreeNode node = new TreeNode();
         traceBack(paths, paths.length - 1, paths[0].length - 1, node);
-        printAlignment(node);
+        List<String> alignments = new LinkedList<>();
+        printAlignment(node, "", alignments);
+        for (String s : alignments) {
+            System.out.println(s);
+        }
         int score = matrix[matrix.length - 1][matrix[0].length - 1];
         return score;
     }
 
-    private void printAlignment(TreeNode node) {
-        Stack<TreeNode> stack = new Stack<>();
-        Stack<String> alignment = new Stack<>();
-        Stack<TreeNode> split = new Stack<>();
-        TreeNode next;
-        stack.push(node);
-        while (!stack.isEmpty()) {
-            next = stack.pop();
-            /*
-            for (TreeNode n : next.children) {
-                stack.push(n);
-            }
-            */
-            if (next.children.size() > 0) {
-                stack.push(next.children.get(0));
-            }
-            if (next.direction == null) {
-                continue;
-            }
-            switch (next.direction) {
+    private String printAlignment(TreeNode node, String alignment, List<String> alignments) {
+        if (node.direction != null) {
+            switch (node.direction) {
                 case DIAGONAL:
-                    alignment.push("DIAG");
+                    alignment = "D" + alignment;
                     break;
                 case LEFT:
-                    alignment.push("LEFT");
+                    alignment = "L" + alignment;
                     break;
                 case UP:
-                    alignment.push("UP");
+                    alignment = "U" + alignment;
                     break;
             }
         }
-        while (!alignment.isEmpty()) {
-            System.out.printf(alignment.pop() + " ");
+        if (node.children.size() == 0) {
+            alignments.add(alignment);
+        } else {
+            for (TreeNode n : node.children) {
+                printAlignment(n, alignment, alignments);
+            }
         }
+        return alignment;
     }
 
     private void traceBack(Path[][] paths, int row, int col, TreeNode parent) {
