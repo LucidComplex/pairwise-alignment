@@ -3,7 +3,6 @@ import fasta.FastaFormatter;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -32,6 +31,9 @@ public class Window {
     private JSpinner gapScore;
     private JLabel scoringSchemeLabel;
     private JButton resetButton;
+    private JLabel matchLabel;
+    private JLabel mismatchLabel;
+    private JLabel gapLabel;
     private ButtonGroup inputType;
 
     public Window() {
@@ -84,6 +86,13 @@ public class Window {
             public void actionPerformed(ActionEvent e) {
                 scoringScheme.setEnabled(false);
                 scoringSchemeLabel.setEnabled(false);
+                matchLabel.setEnabled(true);
+                matchScore.setEnabled(true);
+                mismatchLabel.setEnabled(true);
+                mismatchScore.setEnabled(true);
+                gapLabel.setEnabled(true);
+                gapScore.setEnabled(true);
+                alignButton.setEnabled(true);
             }
         });
 
@@ -92,6 +101,13 @@ public class Window {
             public void actionPerformed(ActionEvent e) {
                 scoringSchemeLabel.setEnabled(true);
                 scoringScheme.setEnabled(true);
+                matchLabel.setEnabled(false);
+                matchScore.setEnabled(false);
+                mismatchLabel.setEnabled(false);
+                mismatchScore.setEnabled(false);
+                gapLabel.setEnabled(false);
+                gapScore.setEnabled(false);
+                alignButton.setEnabled(true);
             }
         });
         quitButton.addActionListener(new ActionListener() {

@@ -127,6 +127,7 @@
                   <component id="66b81" class="javax.swing.JButton" binding="alignButton" default-binding="true">
                     <constraints border-constraint="Center"/>
                     <properties>
+                      <enabled value="false"/>
                       <text value="Align"/>
                     </properties>
                   </component>
@@ -164,27 +165,30 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="6ec6" class="javax.swing.JLabel">
+                  <component id="6ec6" class="javax.swing.JLabel" binding="matchLabel">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <enabled value="false"/>
                       <text value="Match Score:"/>
                     </properties>
                   </component>
-                  <component id="d6275" class="javax.swing.JLabel">
+                  <component id="d6275" class="javax.swing.JLabel" binding="mismatchLabel">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <enabled value="false"/>
                       <text value="Mismatch Score:"/>
                     </properties>
                   </component>
-                  <component id="f5acf" class="javax.swing.JLabel">
+                  <component id="f5acf" class="javax.swing.JLabel" binding="gapLabel">
                     <constraints>
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <enabled value="false"/>
                       <text value="Gap Score:"/>
                     </properties>
                   </component>
@@ -192,19 +196,25 @@
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <enabled value="false"/>
+                    </properties>
                   </component>
                   <component id="7140b" class="javax.swing.JSpinner" binding="mismatchScore" custom-create="true">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <enabled value="false"/>
+                    </properties>
                   </component>
                   <component id="68266" class="javax.swing.JSpinner" binding="gapScore" custom-create="true">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <enabled value="false"/>
+                    </properties>
                   </component>
                 </children>
               </grid>

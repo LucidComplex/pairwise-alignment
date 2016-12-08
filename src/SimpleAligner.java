@@ -1,6 +1,7 @@
 import fasta.Fasta;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by rl-14 on 12/5/16.
@@ -21,30 +22,6 @@ public class SimpleAligner {
         String sequenceB = f2.getSequence();
         int[][] matrix = SequenceAligner.createGlobalMatrix(sequenceA.length(), sequenceB.length(), gap);
         Path[][] paths = fillMatrix(matrix, sequenceA, sequenceB);
-//        for (int i = 1; i < paths.length; i++) {
-//            for (int j = 1; j < paths[0].length; j++) {
-//                if (paths[i][j].diagonal) {
-//                    System.out.printf("d");
-//                }
-//                else {
-//                    System.out.printf(".");
-//                }
-//                if (paths[i][j].left) {
-//                    System.out.printf("l");
-//                }
-//                else {
-//                    System.out.printf(".");
-//                }
-//                if (paths[i][j].up) {
-//                    System.out.printf("u");
-//                }
-//                else {
-//                    System.out.printf(".");
-//                }
-//                System.out.printf(" ");
-//            }
-//            System.out.println();
-//        }
         TreeNode node = new TreeNode();
         traceBack(paths, paths.length - 1, paths[0].length - 1, node);
         List<String> alignments = new LinkedList<>();
@@ -118,20 +95,17 @@ public class SimpleAligner {
             return;
         }
         if (dir.diagonal) {
-            n = new TreeNode(Direction.DIAGONAL);
-            n.parent = parent;
+            n = new TreeNode(Direction.DIAGONAL, col, row);
             parent.children.add(n);
             traceBack(paths, row - 1, col - 1, n);
         }
         if (dir.left) {
-            n = new TreeNode(Direction.LEFT);
-            n.parent = parent;
+            n = new TreeNode(Direction.LEFT, col, row);
             parent.children.add(n);
             traceBack(paths, row, col - 1, n);
         }
         if (dir.up) {
-            n = new TreeNode(Direction.UP);
-            n.parent = parent;
+            n = new TreeNode(Direction.UP, col, row);
             parent.children.add(n);
             traceBack(paths, row - 1, col, n);
         }
@@ -190,14 +164,16 @@ enum Direction {
 class TreeNode {
     Direction direction;
     List<TreeNode> children;
-    TreeNode parent;
+    int col, row;
 
     public TreeNode() {
         children = new LinkedList<>();
     }
 
-    public TreeNode(Direction direction) {
+    public TreeNode(Direction direction, int col, int row) {
         this();
         this.direction = direction;
+        this.col = col;
+        this.row = row;
     }
 }
