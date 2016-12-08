@@ -1,13 +1,20 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 
 public class ResultWindow extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JTextPane resultsPane;
+    private JButton saveButton;
+    String result;
 
-    public ResultWindow() {
+    public ResultWindow(String result) {
+        this.result = result;
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -32,6 +39,34 @@ public class ResultWindow extends JDialog {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(new FileFilter() {
+                    @Override
+                    public boolean accept(File f) {
+                        return f.getName().endsWith(".txt");
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "Text File";
+                    }
+                });
+                int retVal = fileChooser.showSaveDialog(contentPane);
+                if (retVal == JFileChooser.APPROVE_OPTION) {
+                    File fastaFile = fileChooser.getSelectedFile();
+                    try {
+                        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fastaFile));
+                        bufferedWriter.write(result);
+                        bufferedWriter.close();
+                    } catch (java.io.IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     private void onOK() {
@@ -45,7 +80,7 @@ public class ResultWindow extends JDialog {
     }
 
     public static void show(String result) {
-        ResultWindow dialog = new ResultWindow();
+        ResultWindow dialog = new ResultWindow(result);
         dialog.resultsPane.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         dialog.resultsPane.setText(result);
         dialog.pack();
