@@ -33,24 +33,24 @@ public class ProteinAligner {
                   for (int i = 1; i < path.length; i++) {
             for (int j = 1; j < path[0].length; j++) {
                 if (path[i][j].diagonal) {
-                    System.out.printf("d");
+                    System.out.printf("↖");
                 }
                 else {
-                    System.out.printf(".");
+                    System.out.printf(" ");
                 }
                 if (path[i][j].left) {
-                    System.out.printf("l");
+                    System.out.printf("←");
                 }
                 else {
-                    System.out.printf(".");
+                    System.out.printf(" ");
                 }
                 if (path[i][j].up) {
-                    System.out.printf("u");
+                    System.out.printf("↑");
                 }
                 else {
-                    System.out.printf(".");
+                    System.out.printf(" ");
                 }
-                System.out.printf(" ");
+                System.out.printf(" | ");
             }
             System.out.println();
         }
